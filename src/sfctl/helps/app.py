@@ -8,7 +8,7 @@
 
 from knack.help_files import helps
 
-# If the parameter name doesn't match the actual parameter name, not information will be provided in the help page
+# If the parameter name doesn't match the actual parameter name, no information will be provided in the help page
 
 helps['compose create'] = """
     type: command
