@@ -63,7 +63,7 @@ def find_service_manifest(xml_file):
                         'ServiceManifest.xml')
 
 def parse_service_type(xml_file):
-    """Determines the first avaliable service type and the associated
+    """Determines the first available service type and the associated
     type name"""
     root = ET.parse(xml_file).getroot()
     service_type = root.find('fabric:ServiceTypes', XML_NS)

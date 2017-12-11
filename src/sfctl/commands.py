@@ -89,7 +89,6 @@ class SFCommandLoader(CLICommandsLoader):
             with super_group.group('application') as group:
                 group.command('type-list', 'get_application_type_info_list')
                 group.command('type', 'get_application_type_info_list_by_name')
-                group.command('provision', 'provision_application_type')
                 group.command('unprovision', 'unprovision_application_type')
                 group.command('delete', 'delete_application')
                 group.command('list', 'get_application_info_list')
@@ -225,6 +224,7 @@ class SFCommandLoader(CLICommandsLoader):
             with super_group.group('application') as group:
                 group.command('create', 'create')
                 group.command('upgrade', 'upgrade')
+                group.command('provision', 'provision_application_type')
 
         # Need an empty client for the select and upload operations
         with CommandSuperGroup(__name__, self,

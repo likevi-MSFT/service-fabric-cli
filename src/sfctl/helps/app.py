@@ -8,6 +8,8 @@
 
 from knack.help_files import helps
 
+# If the parameter name doesn't match the actual parameter name, not information will be provided in the help page
+
 helps['compose create'] = """
     type: command
     short-summary: Creates a Service Fabric application from a Compose file
@@ -20,7 +22,7 @@ helps['compose create'] = """
 helps['application upload'] = """
     type: command
     short-summary: Copy a Service Fabric application package to the image store
-    long-summary: Optionally display upload progress for each file in the 
+    long-summary: Optionally display upload progress for each file in the
       package. Upload progress is sent to `stderr`
     parameters:
         - name: --path
@@ -33,6 +35,34 @@ helps['application upload'] = """
           type: string
           short-summary: Destination image store to upload the application
             package to
+"""
+
+# the pipe in long-summary preserves the newlines.
+helps['application provision'] = """
+    type: command
+    parameters:
+        - name: --provision-kind
+          type: string
+          short-summary: Provisions or registers a Service Fabric application type with the cluster using the .sfpkg package in the
+            external store or using the application package in the image store.
+          long-summary: Provisions a Service Fabric application type with the cluster.
+            This is required before any new applications can be instantiated.
+            The provision operation can be performed either on the application package specified by the relativePathInImageStore,
+            or by using the uri of the external .sfpkg.
+        - name: --application-type-build-path
+          type: string
+          short-summary: For provision kind image store only. The relative path for the application package in the image store specified during the prior upload operation.
+        - name: --application-package-download-uri
+          type: string
+          short-summary: The path to the '.sfpkg' application package from where the application package can be downloaded using HTTP or HTTPS protocols.
+          long-summary: For provision kind external store only. The application package can be stored in an external store that provides GET operation to download the file.
+            Supported protocols are HTTP and HTTPS, and the path must allow READ access.
+        - name: --application-type-name
+          type: string
+          short-summary: For provision kind external store only. The application type name represents the name of the application type found in the application manifest.
+        - name: --application-type-version
+          type: string
+          short-summary: For provision kind external store only. The application type version represents the version of the application type found in the application manifest.
 """
 
 helps['application upgrade'] = """
