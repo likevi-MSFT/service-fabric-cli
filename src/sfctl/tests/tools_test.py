@@ -7,15 +7,13 @@
 """Tests for helper methods that may be used by various components."""
 
 import unittest
-import os
 import sfctl.params as sf_params
-from mock import patch, MagicMock
+from knack.util import CLIError
 
-# TODO: Make sure this is actually run
 class ToolTests(unittest.TestCase):
     """Tooling tests"""
 
-    def parse_boolean(self):
+    def parse_boolean_test(self):
         """Parse string into a boolean"""
         input_string = "truE"
         returned_bool = sf_params.to_bool(input_string)

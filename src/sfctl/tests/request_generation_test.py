@@ -8,7 +8,7 @@
 
 from unittest import skipUnless
 from mock import patch
-from knack.testsdk import (ScenarioTest, JMESPathCheck, NoneCheck)
+from knack.testsdk import (ScenarioTest)
 from sfctl.entry import cli
 from jsonpickle import decode
 from vcr import (VCR, use_cassette)
@@ -52,14 +52,14 @@ class ServiceFabricRequestTests(ScenarioTest):
             try:
                 response = self.cmd('application provision --provision-kind=ImageStorePath --application-type-build-path=test_path')
             except AssertionError:
-                print('Caught exception. See {0} - first item - for details.'.format(generated_file_path), file=stderr)
+                print('This does not indicate an error. Caught exception. See {0} - first item - for details.'.format(generated_file_path), file=stderr)
 
             try:
                 response = self.cmd('application provision --provision-kind=ExternalStore \
                     --application-package-download-uri=test_path --application-type-name=name \
                     --application-type-version=version')
             except AssertionError:
-                print('Caught exception. See {0} - second item - for details.'.format(generated_file_path), file=stderr)
+                print('This does not indicate an error. Caught exception. See {0} - second item - for details.'.format(generated_file_path), file=stderr)
 
         # Read recorded JSON file
         with open(generated_file_path, 'r') as http_recording_file:
