@@ -44,7 +44,7 @@ class ServiceFabricRequestTests(ScenarioTest):
             # if the file doesn't exist, then there's nothing for us to do
             pass
 
-        my_vcr = VCR(serializer='json')
+        my_vcr = VCR(serializer='json', record_mode='all', match_on=['uri', 'method'])
 
         # Record the HTTP request - this writes the recodings to generated_file_path
         # Run async=false tests for simplicity

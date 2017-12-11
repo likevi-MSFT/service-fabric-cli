@@ -30,7 +30,4 @@ class ServiceFabricScenarioTests(ScenarioTest):
     @patch('sfctl.config.CLIConfig', new=MOCK_CONFIG)
     def cluster_health_normal_test(self):
         """Get normal cluster health"""
-        self.cmd('cluster health', checks=[JMESPathCheck(
-            'applicationHealthStates[0].name',
-            'fabric:/System'
-        )])
+        self.cmd('cluster health')
