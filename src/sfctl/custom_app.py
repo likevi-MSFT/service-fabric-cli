@@ -55,12 +55,12 @@ def provision_application_type(client,
 
     # Validate inputs
     if (not provision_kind):
-        raise CLIError('Missing required parameters')
+        raise CLIError('Missing required parameter --provision-kind.')
 
     # Validate inputs
     if (provision_kind == "ImageStorePath"):
         if (not application_type_build_path):
-            raise CLIError('Missing required parameter --application-type-build-path')
+            raise CLIError('Missing required parameter --application-type-build-path.')
 
         provision_application_type_description_input = ProvisionApplicationTypeDescription(
             async=to_bool(async),
@@ -68,7 +68,7 @@ def provision_application_type(client,
             )
     elif (provision_kind == "ExternalStore"):
         if (not all([application_package_download_uri, application_type_name, application_type_version])):
-            raise CLIError('Missing required parameters. The following are required: --application-package-download-uri, --application-type-name, --application-type-version')
+            raise CLIError('Missing required parameters. The following are required: --application-package-download-uri, --application-type-name, --application-type-version.')
         provision_application_type_description_input = ExternalStoreProvisionApplicationTypeDescription(
             async=to_bool(async),
             application_package_download_uri = application_package_download_uri,
@@ -76,11 +76,11 @@ def provision_application_type(client,
             application_type_version = application_type_version
             )
     else:
-        raise CLIError('Parameter --provision-kind has an incorrect value. Choose from the following: ImageStorePath, ExternalStore')
+        raise CLIError('Parameter --provision-kind has an incorrect value. Choose from the following: ImageStorePath, ExternalStore.')
 
     api_version = "6.1"
 
-    # Construct URLds
+    # Construct URLs
     url = '/ApplicationTypes/$/Provision'
 
     # Construct parameters

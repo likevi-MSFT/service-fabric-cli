@@ -10,6 +10,12 @@ from knack.help_files import helps
 
 # If the parameter name doesn't match the actual parameter name, no information will be provided in the help page
 
+# To keep newlines in the help documentation, follow this format:
+# long-summary: |
+#    Following are the ...
+#    1. text
+#    2. text
+
 helps['compose create'] = """
     type: command
     short-summary: Creates a Service Fabric application from a Compose file
@@ -40,15 +46,21 @@ helps['application upload'] = """
 # the pipe in long-summary preserves the newlines.
 helps['application provision'] = """
     type: command
+    short-summary: Provisions or registers a Service Fabric application type with the cluster using the .sfpkg package in the
+        external store or using the application package in the image store.
+    long-summary:
+        Provisions a Service Fabric application type with the cluster.
+        This is required before any new applications can be instantiated.
+        The provision operation can be performed either on the application package specified by the relativePathInImageStore,
+        or by using the URI of the external .sfpkg.
     parameters:
         - name: --provision-kind
           type: string
-          short-summary: Provisions or registers a Service Fabric application type with the cluster using the .sfpkg package in the
-            external store or using the application package in the image store.
-          long-summary: Provisions a Service Fabric application type with the cluster.
-            This is required before any new applications can be instantiated.
-            The provision operation can be performed either on the application package specified by the relativePathInImageStore,
-            or by using the uri of the external .sfpkg.
+          short-summary: The kind of application type registration or provision requested.
+          long-summary: |
+             The application package can be registered or provisioned either from the image store or from an external store. Following are the kinds of the application type provision:
+                - ImageStorePath: Indicates that the provision is for a package that was previously uploaded to the image store.
+                - ExternalStore: Indicates that the provision is for an application package that was previously uploaded to an external store. The application package ends with the extension *.sfpkg.
         - name: --application-type-build-path
           type: string
           short-summary: For provision kind image store only. The relative path for the application package in the image store specified during the prior upload operation.
