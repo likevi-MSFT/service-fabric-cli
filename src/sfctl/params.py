@@ -7,22 +7,11 @@
 """Custom parameter handling for commands"""
 import json
 from knack.arguments import ArgumentsContext
-from knack.util import CLIError
-
-# There is no need to specify type=str because that is the default value (you also can't specify type=str)
 
 def json_encoded(arg_str):
     """Convert from argument JSON string to complex object"""
 
     return json.loads(arg_str)
-
-def to_bool(arg_str):
-    if (arg_str.lower() == "true"):
-        return True
-    elif (arg_str.lower() == "false"):
-        return False
-    else:
-        raise CLIError('Boolean parameter has invalid input. Please ensure input is either "true" or "false".')
 
 def custom_arguments(self, _): #pylint: disable=too-many-statements
     """Load specialized arguments for commands"""
@@ -40,11 +29,7 @@ def custom_arguments(self, _): #pylint: disable=too-many-statements
         arg_context.argument('max_node_count', type=int)
 
     with ArgumentsContext(self, 'application deployed-list') as arg_context:
-        arg_context.argument('include_health_state', type=to_bool)
         arg_context.argument('max_results', type=int)
-
-    with ArgumentsContext(self, 'application deployed') as arg_context:
-        arg_context.argument('include_health_state', type=to_bool)
 
     with ArgumentsContext(self, 'application list') as arg_context:
         arg_context.argument('application_definition_kind_filter', type=int)

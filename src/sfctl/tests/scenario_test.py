@@ -8,7 +8,7 @@
 
 from unittest import skipUnless
 from mock import patch
-from knack.testsdk import (ScenarioTest, JMESPathCheck, NoneCheck)
+from knack.testsdk import (ScenarioTest, NoneCheck)
 from sfctl.entry import cli
 from sfctl.tests.helpers import (ENDPOINT, MOCK_CONFIG)
 

@@ -12,71 +12,63 @@ import os
 import sys
 import shutil
 from knack.util import CLIError
-from sfctl.params import to_bool
+from msrest.pipeline import ClientRawResponse
 
-def provision_application_type(client,
-                          provision_kind, async="false",
-                          application_type_build_path=None,
-                          application_package_download_uri=None, application_type_name=None, application_type_version=None,
-                          timeout=60, custom_headers=None, raw=False):
+# We are disabling some W0212 lint warnings in the following function
+# because of a problem with the generated SDK that does not allow this
+# function to be called upon from within the generated SDK.
+def provision_application_type(client, #pylint: disable=too-many-locals,invalid-name
+                               image_store_provision=False,
+                               external_store_provision=False,
+                               async_operation=False,
+                               application_type_build_path=None,
+                               application_package_download_uri=None,
+                               application_type_name=None,
+                               application_type_version=None,
+                               timeout=60, custom_headers=None, raw=False):
     """Provisions or registers a Service Fabric application type with the
         cluster using the .sfpkg package in the external store or using the
         application package in the image store.
-
-        Provisions or registers a Service Fabric application type with the
-        cluster. This is required before any new applications can be
-        instantiated. The provision operation can be performed either on the
-        application package specified by the relativePathInImageStore, or by
-        using the uri of the external .sfpkg.
-
-        :param async: Indicates whether or not provisioning should
-         occur asynchronously. When set to true, the provision operation
-         returns when the request is accepted by the system, and the
-         provision operation continues without any timeout limit. The default
-         value is false. For large application packages, we recommend setting the value to true.
-        :type async: bool
-        :param timeout: The server timeout for performing the operation in
-         seconds. This specifies the time duration that the client is willing
-         to wait for the requested operation to complete. The default value
-         for this parameter is 60 seconds.
-        :type timeout: long
     """
 
-    from azure.servicefabric.models.provision_application_type_description import (
-        ProvisionApplicationTypeDescription
-    )
-    from azure.servicefabric.models.external_store_provision_application_type_description import (
-        ExternalStoreProvisionApplicationTypeDescription
-    )
+    from azure.servicefabric.models.provision_application_type_description \
+       import (ProvisionApplicationTypeDescription)
+    from azure.servicefabric.models.external_store_provision_application_type_description import (ExternalStoreProvisionApplicationTypeDescription) # pylint: disable=line-too-long
 
     from azure.servicefabric import models
 
-    provision_application_type_description_input = None
+    provision_description = None
 
     # Validate inputs
-    if (not provision_kind):
-        raise CLIError('Missing required parameter --provision-kind.')
+    if sum([image_store_provision, external_store_provision]) != 1:
+        raise CLIError('Must specify either image_store_provision or \
+            external_store_provision, not both')
 
     # Validate inputs
-    if (provision_kind == "ImageStorePath"):
-        if (not application_type_build_path):
-            raise CLIError('Missing required parameter --application-type-build-path.')
+    if image_store_provision:
+        if not application_type_build_path:
+            raise CLIError('Missing required parameter \
+            --application-type-build-path.')
 
-        provision_application_type_description_input = ProvisionApplicationTypeDescription(
-            async=to_bool(async),
-            application_type_build_path = application_type_build_path
-            )
-    elif (provision_kind == "ExternalStore"):
-        if (not all([application_package_download_uri, application_type_name, application_type_version])):
-            raise CLIError('Missing required parameters. The following are required: --application-package-download-uri, --application-type-name, --application-type-version.')
-        provision_application_type_description_input = ExternalStoreProvisionApplicationTypeDescription(
-            async=to_bool(async),
-            application_package_download_uri = application_package_download_uri,
-            application_type_name = application_type_name,
-            application_type_version = application_type_version
-            )
+        provision_description = \
+            ProvisionApplicationTypeDescription(
+                async_operation,
+                application_type_build_path=application_type_build_path
+                )
     else:
-        raise CLIError('Parameter --provision-kind has an incorrect value. Choose from the following: ImageStorePath, ExternalStore.')
+        if not all([application_package_download_uri, application_type_name, \
+            application_type_version]):
+            raise CLIError('Missing required parameters. \
+                The following are required: \
+                --application-package-download-uri, --application-type-name, \
+                --application-type-version.')
+        provision_description = \
+            ExternalStoreProvisionApplicationTypeDescription(
+                async_operation,
+                application_package_download_uri=\
+                    application_package_download_uri,
+                application_type_name=application_type_name,
+                application_type_version=application_type_version)
 
     api_version = "6.1"
 
@@ -85,30 +77,41 @@ def provision_application_type(client,
 
     # Construct parameters
     query_parameters = {}
-    query_parameters['api-version'] = client._serialize.query("api_version", api_version, 'str')
+    query_parameters['api-version'] = client._serialize.query( # pylint: disable=W0212
+        "api_version", api_version, 'str')
     if timeout is not None:
-        query_parameters['timeout'] = client._serialize.query("timeout", timeout, 'long', maximum=4294967295, minimum=1)
+        query_parameters['timeout'] = client._serialize.query( # pylint: disable=W0212
+            "timeout",
+            timeout,
+            'long',
+            maximum=4294967295,
+            minimum=1)
 
     # Construct headers
     header_parameters = {}
-    header_parameters['Content-Type'] = 'application/json; charset=utf-8'
+    header_parameters['Content-Type'] = 'application/json; \
+        charset=utf-8'
     if custom_headers:
         header_parameters.update(custom_headers)
 
     # Construct body
     body_content = None
-    if (provision_kind == "ImageStorePath"):
-        body_content = client._serialize.body(provision_application_type_description_input, 'ProvisionApplicationTypeDescription')
+    if image_store_provision:
+        body_content = client._serialize.body( # pylint: disable=W0212
+            provision_description,
+            'ProvisionApplicationTypeDescription')
     else:
-        body_content = client._serialize.body(provision_application_type_description_input, 'ExternalStoreProvisionApplicationTypeDescription')
+        body_content = client._serialize.body( # pylint: disable=W0212
+            provision_description,
+            'ExternalStoreProvisionApplicationTypeDescription')
 
     # Construct and send request
-    request = client._client.post(url, query_parameters)
-    response = client._client.send(
+    request = client._client.post(url, query_parameters) # pylint: disable=W0212
+    response = client._client.send( # pylint: disable=W0212
         request, header_parameters, body_content)
 
     if response.status_code not in [200, 202]:
-        raise models.FabricErrorException(client._deserialize, response)
+        raise models.FabricErrorException(client._deserialize, response) # pylint: disable=W0212
 
     if raw:
         client_raw_response = ClientRawResponse(None, response)

@@ -8,7 +8,8 @@
 
 from knack.help_files import helps
 
-# If the parameter name doesn't match the actual parameter name, no information will be provided in the help page
+# If the parameter name doesn't match the actual parameter name,
+# no information will be provided in the help page
 
 # To keep newlines in the help documentation, follow this format:
 # long-summary: |
@@ -54,13 +55,12 @@ helps['application provision'] = """
         The provision operation can be performed either on the application package specified by the relativePathInImageStore,
         or by using the URI of the external .sfpkg.
     parameters:
-        - name: --provision-kind
+        - name: --image-store-provision
           type: string
-          short-summary: The kind of application type registration or provision requested.
-          long-summary: |
-             The application package can be registered or provisioned either from the image store or from an external store. Following are the kinds of the application type provision:
-                - ImageStorePath: Indicates that the provision is for a package that was previously uploaded to the image store.
-                - ExternalStore: Indicates that the provision is for an application package that was previously uploaded to an external store. The application package ends with the extension *.sfpkg.
+          short-summary: The location from where application package can be registered or provisioned. Indicates that the provision is for a package that was previously uploaded to the image store.
+        - name: --external-store-provision
+          type: string
+          short-summary: The location from where application package can be registered or provisioned. Indicates that the provision is for an application package that was previously uploaded to an external store. The application package ends with the extension *.sfpkg.
         - name: --application-type-build-path
           type: string
           short-summary: For provision kind image store only. The relative path for the application package in the image store specified during the prior upload operation.
@@ -75,6 +75,12 @@ helps['application provision'] = """
         - name: --application-type-version
           type: string
           short-summary: For provision kind external store only. The application type version represents the version of the application type found in the application manifest.
+        - name: --async-operation
+          type: bool
+          short-summary: Indicates whether or not provisioning should occur asynchronously.
+          long-summary: When set to true, the provision operation returns when the request is accepted by the system, and the
+            provision operation continues without any timeout limit. The default value is false.
+            For large application packages, we recommend setting the value to true.
 """
 
 helps['application upgrade'] = """
