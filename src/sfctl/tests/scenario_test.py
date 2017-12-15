@@ -67,4 +67,4 @@ class ServiceFabricScenarioTests(ScenarioTest):
         self.cmd('property get --name {0} --property-name {1}'
                  .format("NonExistentName", "Test"),
                  expect_failure=True)
->>>>>>> 048a3a89a210348c57440de96febf3b7a3a709a7
+
